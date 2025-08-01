@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anna Fominykh</title>
+
+  <!-- AOS Styles -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f6f9;
+      color: #333;
+    }
+
+    header {
+      background: url('https://cge.fresnostate.edu/images/gis-banner-web.jpg') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 80px 20px;
+      position: relative;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    header h1, header p {
+      position: relative;
+      z-index: 1;
+    }
+
+    header h1 {
+      font-size: 3em;
+      margin: 0;
+    }
+
+    nav {
+      background: #ffffff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #007B8A;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #004f58;
+    }
+
+    section {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    section h2 {
+      color: #007B8A;
+      border-bottom: 2px solid #007B8A;
+      padding-bottom: 5px;
+    }
+
+    .about-me {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .about-me img {
+      max-width: 300px;
+      border-radius: 10px;
+    }
+
+    .about-me div {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .portfolio-item {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .portfolio-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    footer {
+      text-align: center;
+      background: #007B8A;
+      color: white;
+      padding: 20px;
+      margin-top: 40px;
+    }
+
+    ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    a {
+      color: #007B8A;
+    }
+
+    a:hover {
+      color: #004f58;
+    }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding: 2rem;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.3s ease;
+  }
+
+  .modal-content {
+    background: #fff;
+    position: relative;
+    top: 5vh;                  
+    height: 80vh;  
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 800px;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease;
+  }
+
+  .modal-scrollable {
+    overflow-y: auto;
+    flex-grow: 1;
+    margin-top: 1rem;
+    padding-right: 8px; /* dla scrollbara */
+  }
+
+  .close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  .modal-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-section h4 {
+    margin-bottom: 0.3rem;
+    color: #2a2a2a;
+  }
+
+  .image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .image-gallery img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    max-height: 200px;
+    object-fit: cover;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+    @media (max-width: 768px) {
+      .about-me {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav {
+        flex-wrap: wrap;
+      }
+
+      nav a {
+        margin: 5px 10px;
+      }
+    }
+  </style>
+</head>
+<!-- Widok okna projektu z portfolio -->
+<!-- <div id="projectModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modalTitle"></h2>
+
+    <div class="modal-scrollable">
+      <div class="modal-section">
+        <h4>🎯 Cel i zakres</h4>
+        <p id="modalScope"></p>
+      </div>
+      <div class="modal-section">
+        <h4>🛠️ Użyte dane i narzędzia</h4>
+        <p id="modalTools"></p>
+      </div>
+      <div class="modal-section">
+        <h4>🔄 Proces wykonania krok po kroku</h4>
+        <p id="modalSteps"></p>
+      </div>
+      <div class="modal-section">
+        <h4>📊 Wyniki i wnioski</h4>
+        <p id="modalResults"></p>
+      </div>
+      <div class="modal-section">
+        <h4>🖼️ Grafiki, mapy, screeny</h4>
+        <div id="modalImages" class="image-gallery"></div>
+      </div>
+      <div class="modal-section">
+        <h4>👩‍💼 Moja rola i zdobyte umiejętności</h4>
+        <p id="modalSkills"></p>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!--  -->
+<body>
+
+  <header data-aos="fade-down">
+    <h1>Anna Fominykh</h1>
+    <p>Specjalistka technologii GiS oraz Teledetekcji</p>
+  </header>
+
+  <nav>
+    <a href="#o-mnie">O mnie</a>
+    <a href="#wyksztalcenie">Wykształcenie</a>
+    <a href="#doswiadczenie">Doświadczenie</a>
+    <a href="#certyfikaty">Certyfikaty</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#kontakt">Kontakt</a>
+  </nav>
+
+  <section id="o-mnie" data-aos="fade-up">
+    <h2>O mnie</h2>
+    <div class="about-me" data-aos="fade-up" data-aos-delay="100">
+      <img src="https://media.licdn.com/dms/image/v2/C4D03AQEkL7qgomGnUg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1650036336807?e=2147483647&v=beta&t=6I1-5wn_jzcdk8Osu3GxD8jogO7L8VdtvT8Y9GSdkGY" alt="Anna Kowalska – Geodetka">
+      <div>
+        <p>Nazywam się Anna Foma i jestem absolwentką kierunku nauk o Ziemi oraz hydrologii i meteorologii.</p>
+        <p>Od kilku miesięcy z pełnym zaangażowaniem rozwijam się w obszarze GIS, i analizy przestrzennej.</p>
+        <p>Portfolio, które oddaję do wglądu, zawiera przykłady mojej pracy projektowej wykonanej w programach SNAP, ArcGIS, QGIS, Civil 3D, oraz z wykorzystaniem narzędzi SAGA GIS i danych teledetekcyjnych.</p>
+      </div>
+      <div>
+        <p>Zawarte tu projekty obrazują moje umiejętności analityczne, techniczne i projektowe – od analizy zlewni, przez tworzenia korytarzy dróg, po analizę powodziową na podstawie zdjęć satelitarnych.</p>
+        <p>Każdy z nich był dla mnie okazją do rozwijania nie tylko umiejętności obsługi oprogramowania, ale też rozumienia procesów przyrodniczych, planowania przestrzennego i adaptacji do zmian klimatu.</p>
+      </div>
+      <div>
+        <p>Portfolio to kieruję do firm, instytucji i zespołów, które poszukują osoby pracowitej, dokładnej, uczącej się szybko i z zaangażowaniem.</p>
+        <p>Moim celem zawodowym jest rozwój w sektorze środowiskowym i miejskim – tam, gdzie GIS łączy się z realnymi działaniami na rzecz zrównoważonego rozwoju.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="wyksztalcenie" data-aos="fade-right">
+    <h2>Wykształcenie</h2>
+    <ul>
+      <b>2019-2022</b>
+      <p>Licencjat Nauki o ziemi Geoinformacyjnych Technologii i Kosmicznego Monitoringu Ziemi, Charkowski Aerokosmiczny Uniwersytet im. M. Żukowskiego, Ukraina </p>
+      <p>Temat pracy dyplomowej: Wykorzystanie danych teledetekcji Ziemi i pomiarów geodezyjnych dla budownictwa makiety kartograficznej centrum handlowego „NIKOLSKI”</p>
+      <b>2015-2019</b>
+      <p>Hydro – Meteorologiczne Technikum pod patronatem Odeskiego Narodowego Uniwersytetu Ekologicznego</p>
+      <p>3 miesiąca practyki  w Firmie „Kharkowska sieć kanalizacijna”</p>
+    </ul>
+  </section>
+
+  <section id="doswiadczenie" data-aos="fade-right">
+    <h2>Doświadczenie zawodowe</h2>
+    <ul>
+      <b>1.5.2019 – 30.1.2021</b>
+      <p>Specjalista ds. analizy danych kartograficznych</p>
+      <p>Leśnictwo Charkowskie</p>
+      <b>9.6.2020 – 3.7.2020</b>
+      <p>GIS asystent</p>
+      <p>Navigation and Geodetic Center </p>
+    </ul>
+  </section>
+
+  <section id="certyfikaty" data-aos="fade-right">
+    <h2>Certyfikaty</h2>
+    <div class="portfolio-grid">
+      <div class="portfolio-item" data-project="1" data-aos="zoom-in" data-aos-delay="100" onclick="openPDF('certificates/Certificate-Anna-Fominykh.pdf')">
+        <h3>"Echoes In Space"</h3>
+        <p>Kliknij, otworzyć dokument</p>
+      </div>
+      <div class="portfolio-item" data-project="2" data-aos="zoom-in" data-aos-delay="200" onclick="openPDF('certificates/Certificate_AutoCAD-CIVIL3D.pdf')">
+        <h3>Kurs - Autocad Civil 3d od podstaw</h3>
+        <p>Kliknij, aby otworzyć dokument</p>
+      </div>
+      <div class="portfolio-item" data-project="3" data-aos="zoom-in" data-aos-delay="300" onclick="openPDF('certificates/Certificate_Basics-of-Remote-Sensing.pdf')">
+        <h3>LAND IN FOCUS - BASICS OF REMOTE SENSING</h3>
+        <p>Kliknij, aby otworzyć dokument</p>
+      </div>
+      <div class="portfolio-item" data-project="4" data-aos="zoom-in" data-aos-delay="400" onclick="openPDF('certificates/Certificate_Ecosystems-Anna_Fominykh.pdf')">
+        <h3>LAND IN FOCUS - FOREST ECOSYSTEMS</h3>
+        <p>Kliknij, aby otworzyć dokument</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="portfolio" data-aos="fade-left">
+    <h2>Portfolio</h2>
+    <div class="portfolio-grid">
+      <div class="portfolio-item" data-project="1" data-aos="zoom-in" data-aos-delay="100" onclick="openPDF('pdfs/Analiza_zlewni.pdf')">
+        <h3>Analiza zlewni w środowisku QGIS (SAGA) – projekt porównawczy z Civil 3D </h3>
+        <p>Oba środowiska mają swoje mocne strony. QGIS z SAGA pozwala na elastyczne
+          podejście do analiz przestrzennych i bardzo szybkie generowanie map
+          hydrologicznych, a jego otwartość jest dużym atutem w pracy naukowej czy
+          samodzielnej. Civil 3D z kolei oferuje bardzo precyzyjne odwzorowanie geometrii
+          i dobrą integrację z projektowaniem inżynieryjnym, co czyni go idealnym dla prac
+          projektowych.
+        </p>
+        <p>Kliknij, otworzyć plik pdf</p>
+      </div>
+      <div class="portfolio-item" data-project="2" data-aos="zoom-in" data-aos-delay="200" onclick="openPDF('pdfs/Analiza_powodzi.pdf')">
+        <h3>ANALIZA ZASIĘGU POWODZI Z WYKORZYSTANIEM TELEDETEKCJI </h3>
+        <p>Dzięki analizie teledetekcyjnej możliwe było szybkie i precyzyjne określenie obszarów
+          objętych powodzią.
+          W przyszłości takie podejście może wspierać działania prewencyjne i ratunkowe, np.
+          poprzez prognozowanie ryzyka zalania.
+          Projekt pokazał również, że znajomość przetwarzania danych satelitarnych i indeksów
+          pokrycia terenu (jak NDWI) jest kluczowa dla specjalistów GIS w kontekście zmian
+          klimatycznych i zarządzania ryzykiem środowiskowym.
+        </p>
+        <p>Kliknij, aby otworzyć plik pdf</p>
+      </div>
+      <div class="portfolio-item" data-project="3" data-aos="zoom-in" data-aos-delay="300" onclick="openPDF('pdfs/Projekt_drogi_lokalnej.pdf')">
+        <h3>PROJEKT DROGI LOKALNEJ – MODELOWANIE W ŚRODOWISKU CIVIL 3D</h3>
+        <p>Civil 3D umożliwia precyzyjne i elastyczne projektowanie dróg dzięki
+          integracji danych przestrzennych z narzędziami do modelowania terenu,
+          profilu i korytarzy.
+          Kluczowe było zachowanie ciągłości danych w modelu TIN, szczególnie przy
+          stosowaniu linii nieciągłości.
+          Możliwość tabelarycznej edycji geometrii (np. trasy i niwelety) ułatwia
+          dokładne dostosowanie parametrów drogi.
+          Rzutowanie elementów z planu sytuacyjnego na profil i przekroje pozwala na
+          lepsze zrozumienie przestrzennego kontekstu projektu.
+        </p>
+        <p>Kliknij, aby otworzyć plik pdf</p>
+      </div>
+      <div class="portfolio-item" data-project="4" data-aos="zoom-in" data-aos-delay="400" onclick="openPDF('pdfs/Projekt_drogowy.pdf')">
+        <h3>PROJEKT DROGOWY – MODEL KONCEPCYJNY W CIVIL 3D</h3>
+        <p>Projekt ten stanowił przekrojowe wprowadzenie do pracy projektanta drogowego
+          w środowisku BIM. Zrozumiałam zależność między danymi terenowymi a
+          układem drogi oraz nauczyłam się pracy w złożonym, wieloetapowym procesie
+          inżynierskim.
+        </p>
+        <p>Kliknij, aby otworzyć plik pdf</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kontakt" data-aos="fade-up">
+    <h2>Kontakt</h2>
+    <p>📧 Email: <a href="mailto:Anne.fominuh@gmail.com">Anne.fominuh@gmail.com</a></p>
+    <p>📞 Telefon: <a href="tel:+48123456789">+48 787 327 735</a></p>
+    <p>📍 Lokalizacja: Warszawa, Polska</p>
+  </section>
+
+  <footer data-aos="fade-in">
+    &copy; 2025 Anna Fominykh – Geodetka. Wszelkie prawa zastrzeżone.
+  </footer>
+
+  <!-- AOS Script -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 1000,
+      once: true
+    });
+  </script>
+
+  <!-- <script>
+    const projectData = {
+      1: {
+        title: "Analiza zlewni w środowisku QGIS (SAGA) – projekt porównawczy z Civil 3D ",
+        scope: "Celem pracy było wykonanie mapy zlewni na podstawie danych wysokościowych oraz porównanie wyników i podejścia z narzędziami używanymi w AutoCAD Civil 3D. Analiza ta miała na celu lepsze zrozumienie hydrologicznego zachowania terenu oraz sprawdzenie możliwości narzędzi GIS w modelowaniu powierzchniowym.",
+        tools: "GNSS RTK, tachimetr Topcon, QGIS, AutoCAD Map 3D",
+        steps: "1. Przygotowanie danych ewidencyjnych\n2. Pomiar terenowy RTK\n3. Tachimetria punktów granicznych\n4. Analiza błędów i korekta\n5. Sporządzenie dokumentacji",
+        results: "Wyznaczenie granic z dokładnością do 3 cm. Gotowa dokumentacja została zatwierdzona przez urząd gminy.",
+        images: [
+          "images/analizazlewni_granicazlewni.jpg",
+          "images/analizazlewni_KaluklacjaRastra.jpg",
+          "images/analizazlewni_linieRastra.jpg",
+          "images/analizazlewni_nmt.jpg",
+          "images/analizazlewni_poligongranicy.jpg",
+          "images/analizazlewni_punktyzlewni.jpg",
+          "images/analizazlewni_SAGAFillSinks.jpg",
+          "images/analizazlewni_SAGAStrahler.jpg",
+          "images/analizazlewni_tablica.jpg",
+          "images/analizazlewni_warstwicowymodel.jpg",
+          "images/analizazlewni_WspolrzedneXY.jpg",
+          "images/analizazlewni_tablicanarzedzi.jpg"
+        ],
+        skills: "Samodzielne wykonanie pomiaru, obsługa sprzętu GNSS i tachimetru, tworzenie mapy wektorowej w QGIS, praca z klientem."
+      },
+      2: {
+        title: "ANALIZA ZASIĘGU POWODZI Z WYKORZYSTANIEM TELEDETEKCJI",
+        scope: "Projekt dotyczył identyfikacji oraz wizualizacji zasięgu powodzi rzecznej poprzez analizę zdjęć satelitarnych z dwóch różnych momentów czasowych – przed i w trakcie powodzi. Celem było wskazanie zalanych terenów i zilustrowanie zmiany w pokryciu terenu na podstawie danych wielospektralnych. ",
+        tools: "GPS Leica, QGIS, MicroStation, Numeryczny Model Terenu (NMT), ortofotomapa",
+        steps: "1. Pozyskanie danych: użyto dwóch obrazów satelitarnych (np. Sentinel-2 lub Landsat) z tego samego obszaru, ale wykonanych w różnych terminach – sprzed i w czasie powodzi." +
+        "\n2. Obróbka danych: dokonano korekcji atmosferycznej oraz dostosowano przestrzenne parametry zdjęć. " +
+        "\n3. Analiza kanałów spektralnych: poprzez odpowiednie połączenie kanałów RGB i NIR (bliska podczerwień), zwiększono kontrast pomiędzy wodą a lądem – woda została wyraźnie zaznaczona jako ciemny obszar. " +
+        "\n4. Nałożenie obrazów: zastosowano analizę różnicową (np. NDWI – Normalized Difference Water Index), aby precyzyjnie wskazać tereny zalane. " +
+        "\n5. Wizualizacja i interpretacja: zidentyfikowano obszary powodziowe oraz porównano zmienność w stosunku do pierwotnego stanu terenu.",
+        results: "Mapa zatwierdzona przez projektanta. Pomogła uniknąć kolizji z istniejącym uzbrojeniem terenu.",
+        images: [
+          "images/mapa1.png",
+          "images/mapa2.png"
+        ],
+        skills: "Analiza danych geodezyjnych, praca z modelem terenu, generowanie warstw mapowych, tworzenie dokumentacji technicznej."
+      },
+      3: {
+        title: "PROJEKT DROGI LOKALNEJ – MODELOWANIE W ŚRODOWISKU CIVIL 3D",
+        scope: "Celem projektu było przeprowadzenie kompleksowego procesu projektowania odcinka drogi lokalnej w oparciu o dane terenowe i narzędzia programu AutoCAD Civil 3D. Projekt obejmował zarówno stworzenie modelu terenu, jak i wyznaczenie trasy, profilu, korytarza drogowego oraz określenie robót ziemnych. ",
+        tools: "GPS Leica, QGIS, MicroStation, Numeryczny Model Terenu (NMT), ortofotomapa",
+        steps: "1. Zebranie danych ZUDP\n2. Pomiar sytuacyjno-wysokościowy\n3. Tworzenie NMT\n4. Digitalizacja mapy\n5. Wydanie mapy w formacie DXF",
+        results: "Mapa zatwierdzona przez projektanta. Pomogła uniknąć kolizji z istniejącym uzbrojeniem terenu.",
+        images: [
+          "images/mapa1.png",
+          "images/mapa2.png"
+        ],
+        skills: "Analiza danych geodezyjnych, praca z modelem terenu, generowanie warstw mapowych, tworzenie dokumentacji technicznej."
+      },
+      4: {
+        title: "PROJEKT DROGOWY – MODEL KONCEPCYJNY W CIVIL 3D",
+        scope: "Sporządzenie mapy do celów projektowych pod budowę sieci kanalizacyjnej.",
+        tools: "GPS Leica, QGIS, MicroStation, Numeryczny Model Terenu (NMT), ortofotomapa",
+        steps: "1. Zebranie danych ZUDP\n2. Pomiar sytuacyjno-wysokościowy\n3. Tworzenie NMT\n4. Digitalizacja mapy\n5. Wydanie mapy w formacie DXF",
+        results: "Mapa zatwierdzona przez projektanta. Pomogła uniknąć kolizji z istniejącym uzbrojeniem terenu.",
+        images: [
+          "images/mapa1.png",
+          "images/mapa2.png"
+        ],
+        skills: "Analiza danych geodezyjnych, praca z modelem terenu, generowanie warstw mapowych, tworzenie dokumentacji technicznej."
+      }
+    };
+
+    const modal = document.getElementById("projectModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalScope = document.getElementById("modalScope");
+    const modalTools = document.getElementById("modalTools");
+    const modalSteps = document.getElementById("modalSteps");
+    const modalResults = document.getElementById("modalResults");
+    const modalImages = document.getElementById("modalImages");
+    const modalSkills = document.getElementById("modalSkills");
+    // const modalDescription = document.getElementById("modalDescription");
+    const closeBtn = document.querySelector(".close");
+
+    document.querySelectorAll(".portfolio-item").forEach(card => {
+      card.addEventListener("click", () => {
+        const id = card.getAttribute("data-project");
+        const project = projectData[id];
+
+        modalTitle.textContent = project.title;
+        modalScope.textContent = project.scope;
+        modalTools.textContent = project.tools;
+        modalSteps.textContent = project.steps;
+        modalResults.textContent = project.results;
+        modalSkills.textContent = project.skills;
+
+        modalImages.innerHTML = "";
+        project.images.forEach(src => {
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = "grafika projektu";
+          modalImages.appendChild(img);
+        });
+
+        modal.style.display = "block";
+      });
+    });
+
+    closeBtn.onclick = () => {
+      modal.style.display = "none";
+    };
+
+    window.onclick = e => {
+      if (e.target == modal) {
+        modal.style.display = "none";
+      }
+    };
+  </script> -->
+
+  <script>
+    function openPDF(filePath) {
+      window.open(filePath, '_blank');
+    }
+  </script>
+
+</body>
+</html>
